@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import userService from "../services/user.service.js";
 import { logError } from "../utils/log.util.js";
-import { generateRandomSalt, hashPassword } from "../utils/hash.util.js";
+import { generateRandomSalt, hashPassword, verifyPassword } from "../utils/hash.util.js";
 import { ApiResponse } from "../config/response.js";
 
 const initAdmin = async () => {
@@ -46,10 +46,46 @@ const verifyToken = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-  } catch (error) {}
+    const { email, password } = req.body;
+    const user = await userService.findByEmailForAuth(email);
+    if (!user) {
+      return ApiResponse.Unauthorized(res, "Invalid email or password");
+    }
+    const isValid = await verifyPassword(password, user.salt, user.password);
+    if (!isValid) {
+      return ApiResponse.Unauthorized(res, "Invalid email or password");
+    }
+
+    user.password = undefined;
+    user.salt = undefined;
+    user.reset_password_token = undefined;
+    user.reset_password_expires = undefined;
+
+    const jwtData = {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      iat: Math.floor(Date.now() / 1000),
+    };
+
+    const access_token = jwtEncode(
+      jwtData,
+      CONSTANTS.JWT_SECRET_KEY,
+      CONSTANTS.JWT_EXPIRES_SIGNIN,
+    );
+
+    return ApiResponse.OK(res, {
+      user,
+      access_token,
+    });
+
+  } catch (error) {
+    ApiResponse.InternalServerError(res, error);
+  };
 };
 
 export default {
   initAdmin,
   verifyToken,
+  login,
 };
