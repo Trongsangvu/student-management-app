@@ -1,6 +1,8 @@
+import ClassList from "@/features/class/components/class-list";
+
 const ClassPage = () => {
   return (
-    <div>class page</div>
+    <ClassList />
   );
 };
 
