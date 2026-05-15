@@ -1,6 +1,6 @@
+import { parseQueryParams } from '@/lib/utils';
 import { classService } from "@/features/class/services/class-service";
 import { errorMessage, errorResponse, successResponse } from "@/lib/responses";
-import { parseQueryParams } from "@/lib/utils";
 
 export async function GET(request: Request) {
   try {
