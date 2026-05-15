@@ -7498,9 +7498,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"student-management-app@workspace:.":
+"student-management-client@workspace:.":
   version: 0.0.0-use.local
-  resolution: "student-management-app@workspace:."
+  resolution: "student-management-client@workspace:."
   dependencies:
     "@tailwindcss/postcss": "npm:^4"
     "@types/node": "npm:^20"
