@@ -1,5 +1,5 @@
 import { logError } from "./logger.js";
-import { messageGeneral } from "./messages.js";
+import { MESSAGE_GENERAL } from "./messages.js";
 
 export class ApiResponse {
   static sendResponse(res, statusCode, data = null) {
@@ -18,22 +18,22 @@ export class ApiResponse {
     return this.sendResponse(res, 201, data);
   }
 
-  static BadRequest(res, message = messageGeneral.BAD_REQUEST) {
+  static BadRequest(res, message = MESSAGE_GENERAL.BAD_REQUEST) {
     return this.sendResponse(res, 400, { message });
   }
 
-  static Unauthorized(res, message = messageGeneral.UNAUTHORIZED) {
+  static Unauthorized(res, message = MESSAGE_GENERAL.UNAUTHORIZED) {
     return this.sendResponse(res, 401, { message });
   }
 
-  static NotFound(res, message = messageGeneral.NOT_FOUND) {
+  static NotFound(res, message = MESSAGE_GENERAL.NOT_FOUND) {
     return this.sendResponse(res, 404, { message });
   }
 
   static InternalServerError(
     res,
     err,
-    message = messageGeneral.SOMETHING_WRONG
+    message = MESSAGE_GENERAL.SOMETHING_WRONG
   ) {
     if (err) {
       logError(err);

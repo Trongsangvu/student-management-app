@@ -1,29 +1,21 @@
 {
   "name": "student-management-server",
-  "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
+  "packageManager": "yarn@4.5.2",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV='production' nodemon index.js",
-    "dev": "cross-env NODE_ENV='development' nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "devDependencies": {
-    "cross-env": "^10.1.0"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "dependencies": {
-    "body-parser": "^2.2.1",
     "chalk": "^5.6.2",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
-    "mongoose": "^9.1.1",
-    "socket.io": "^4.8.3",
+    "mongoose": "^9.6.2",
     "winston": "^3.19.0"
   },
-  "packageManager": "yarn@4.13.0+sha512.5c20ba010c99815433e5c8453112165e673f1c7948d8d2b267f4b5e52097538658388ebc9f9580656d9b75c5cc996f990f611f99304a2197d4c56d21eea370e7"
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
 }
