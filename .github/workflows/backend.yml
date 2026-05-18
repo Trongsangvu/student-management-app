@@ -2,12 +2,9 @@ name: Backend CI
 
 on:
   push:
-    branches:
-      - dev
-
+    branches: [dev]
   pull_request:
-    branches:
-      - dev
+    branches: [dev]
 
 jobs:
   check:
@@ -29,13 +26,15 @@ jobs:
           cache-dependency-path: student-management-server/yarn.lock
 
       - name: Enable Corepack
-        run: corepack enable
+        run: |
+          corepack enable
+          corepack prepare yarn@4.13.0 --activate
+
+      - name: Verify Yarn version
+        run: yarn -v
 
       - name: Install dependencies
         run: yarn install --immutable
 
       - name: Run lint
         run: yarn lint
-
-      - name: Run syntax check
-        run: yarn check

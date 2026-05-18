@@ -29,7 +29,9 @@ jobs:
           cache-dependency-path: student-management-client/yarn.lock
 
       - name: Enable Corepack
-        run: corepack enable
+        run: |
+          corepack enable
+          corepack prepare yarn@4.13.0 --activate
 
       - name: Set Yarn version
         run: yarn set version stable
