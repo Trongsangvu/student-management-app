@@ -22,16 +22,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: yarn
-          cache-dependency-path: student-management-server/yarn.lock
 
       - name: Enable Corepack
         run: |
           corepack enable
-          corepack prepare yarn@4.5.2 --activate
+          corepack prepare yarn@4.13.0 --activate
 
       - name: Verify Yarn version
         run: yarn -v
+
+      - name: Cache Yarn
+        uses: actions/cache@v4
+        with:
+          path: student-management-server/.yarn/cache
+          key: yarn-${{ runner.os }}-${{ hashFiles('student-management-server/yarn.lock') }}
+          restore-keys: |
+            yarn-${{ runner.os }}-
 
       - name: Install dependencies
         run: yarn install --immutable
