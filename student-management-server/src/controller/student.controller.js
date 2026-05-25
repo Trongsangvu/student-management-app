@@ -23,7 +23,6 @@ const getAll = async (req, res) => {
   }
 };
 
-// GET student by id
 const getById = async (req, res) => {
   try {
     ApiResponse.OK(res, req.targetUser);
@@ -32,7 +31,6 @@ const getById = async (req, res) => {
   }
 };
 
-// UPDATE student
 const update = async (req, res) => {
   try {
     const student = await User.findByIdAndUpdate(req.params.id, req.body, {
@@ -50,7 +48,6 @@ const update = async (req, res) => {
   }
 };
 
-// DELETE student
 const remove = async (req, res) => {
   try {
     const student = await User.findByIdAndDelete(req.params.id);
