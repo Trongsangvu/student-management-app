@@ -1,12 +1,14 @@
-function PageBtn({
-  children, active, onClick, disabled, ...rest
-}: {
+type Props = {
   children: React.ReactNode;
   active?: boolean;
   onClick?: () => void;
   disabled?: boolean;
   [key: string]: unknown;
-}) {
+};
+
+function PageBtn({
+  children, active, onClick, disabled, ...rest
+}: Props) {
   return (
     <button
       onClick={onClick}
