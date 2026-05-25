@@ -23,7 +23,7 @@ const initAdmin = async () => {
       password: hashedPass,
       first_name: "System",
       last_name: "Administrator",
-      display_name: "System Administrator",
+      full_name: "System Administrator",
       role: "admin",
     });
 

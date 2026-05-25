@@ -6,8 +6,9 @@ import { USER_ROLE } from "../config/enum.js";
 const UserSchema = BaseSchema({
   first_name: String,
   last_name: String,
-  display_name: String,
+  full_name: String,
   phone: String,
+  studentCode: String,
   email: {
     type: String,
     required: true,
@@ -19,6 +20,10 @@ const UserSchema = BaseSchema({
     type: String,
     enum: Object.values(USER_ROLE),
     default: USER_ROLE.USER,
+  },
+  class: {
+    type: Schema.Types.ObjectId,
+    ref: "Class",
   },
   created_by: {
     type: Schema.Types.ObjectId,
