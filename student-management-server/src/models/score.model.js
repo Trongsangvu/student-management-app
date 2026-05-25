@@ -16,4 +16,3 @@ const ScoreSchema = BaseSchema({
 });
 
 export const Score = model("Score", ScoreSchema);
-
