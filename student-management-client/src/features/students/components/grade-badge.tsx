@@ -7,7 +7,7 @@ const STYLES: Record<string, string> = {
   D: "bg-red-50 text-red-700",
 };
 
-export function GradeBadge({ average }: { average: number }) {
+export function GradeBadge({ average }: { average: number; }) {
   const g = letterGrade(average);
   return (
     <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold ${STYLES[g]}`}>

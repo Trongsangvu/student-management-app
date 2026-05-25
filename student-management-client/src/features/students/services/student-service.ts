@@ -6,7 +6,6 @@ export const studentService = {
   async getAll(params: Record<string, string>) {
     const queryString = generateQueryString(params);
     const url = `${API_ENDPOINTS.students}?${queryString}`;
-
     return apiFetch(url);
   },
 

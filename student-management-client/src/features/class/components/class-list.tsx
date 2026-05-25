@@ -1,14 +1,11 @@
 "use client";
 
+import { CLASSES } from "@/constants/common";
+import { LANGUAGES } from "@/constants/language";
+import { ChevronDown, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, ChevronDown } from "lucide-react";
 import { useState } from "react";
-
-const classes = [
-  { id: "C001", name: "CNTT 1", year: "2024-2025" },
-  { id: "C002", name: "CNTT 2", year: "2024-2025" },
-];
 
 const ClassList = () => {
   const [openMenu, setOpenMenu] = useState(false);
@@ -16,10 +13,9 @@ const ClassList = () => {
 
   return (
     <div className="min-h-screen bg-[#f0f4f7] font-sans">
-      {/* Header */}
       <header className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between bg-[#5046e5] px-8 py-3">
         <h2 className="text-xl font-semibold text-white">
-          Student Management
+          {LANGUAGES.STUDENT_MANAGEMENT}
         </h2>
 
         <div className="flex items-center gap-4">
@@ -88,7 +84,6 @@ const ClassList = () => {
       </header>
 
       <div className="grid grid-cols-[258px_1fr]">
-        {/* Sidebar */}
         <aside className="sticky top-0 h-screen bg-white px-3 pt-24 shadow-sm">
           <div className="mb-8 flex justify-center">
             <Image src="/images/U.png" alt="Logo" width={110} height={110} />
@@ -240,7 +235,7 @@ const ClassList = () => {
                   </thead>
 
                   <tbody className="block rounded-b bg-white shadow-md">
-                    {classes.map((item, index) => (
+                    {CLASSES.map((item, index) => (
                       <tr
                         key={item.id}
                         className={`grid grid-cols-3 px-2 py-4 text-lg transition hover:scale-[1.01] hover:shadow-lg ${index % 2 === 1 ? "bg-gray-100" : "bg-white"

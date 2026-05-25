@@ -1,108 +1,21 @@
-"use client";
-
+import StatCard from "@/components/ui/stat-card";
+import SubjectBar from "@/components/ui/subject-bar";
+import { ACTIVITY, GRADE_STYLE, ICON_BUTTONS, SUBJECTS, TABLE_HEADERS, TOP_STUDENTS } from "@/constants/common";
+import { LANGUAGES } from "@/constants/language";
+import { ArrowUpRight, BarChart2, BookOpen, Layers, Search, TrendingDown, TrendingUp, Users } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
-import {
-  Bell,
-  Plus,
-  MoreHorizontal,
-  ArrowUpRight,
-  TrendingUp,
-  TrendingDown,
-  Users,
-  BookOpen,
-  Layers,
-  BarChart2,
-  Search,
-} from "lucide-react";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-
-const SUBJECTS = [
-  { subject: "Mathematics", score: 78, color: "bg-blue-500" },
-  { subject: "Literature", score: 72, color: "bg-emerald-500" },
-  { subject: "English", score: 81, color: "bg-violet-500" },
-  { subject: "Physics", score: 68, color: "bg-orange-500" },
-  { subject: "Chemistry", score: 65, color: "bg-red-500" },
-  { subject: "History", score: 74, color: "bg-pink-500" },
-];
-
-const ACTIVITY = [
-  { dotColor: "bg-emerald-500", title: "Scores uploaded", detail: "Math, Class 10A", time: "10 minutes ago" },
-  { dotColor: "bg-blue-500", title: "New student enrolled", detail: "Nguyen Minh Khoa, 11B", time: "2 hours ago" },
-  { dotColor: "bg-amber-500", title: "Grade report generated", detail: "Semester 1 summary", time: "Yesterday, 4:30 PM" },
-  { dotColor: "bg-red-500", title: "3 students flagged", detail: "scores below passing", time: "Yesterday, 2:10 PM" },
-];
-
-const TOP_STUDENTS = [
-  { rank: 1, name: "Tran Bao Chau", cls: "12A", math: 95, lit: 88, eng: 92, avg: 91.7, grade: "A" },
-  { rank: 2, name: "Nguyen Thi Lan", cls: "11B", math: 90, lit: 92, eng: 87, avg: 89.7, grade: "B" },
-  { rank: 3, name: "Le Duc Minh", cls: "12A", math: 88, lit: 79, eng: 91, avg: 86.0, grade: "B" },
-  { rank: 4, name: "Pham Hong Anh", cls: "10C", math: 82, lit: 86, eng: 89, avg: 85.7, grade: "B" },
-  { rank: 5, name: "Vo Quoc Khanh", cls: "11A", math: 85, lit: 80, eng: 84, avg: 83.0, grade: "B" },
-];
-
-const GRADE_STYLE: Record<string, string> = {
-  A: "bg-emerald-100 text-emerald-700",
-  B: "bg-blue-100 text-blue-700",
-  C: "bg-amber-100 text-amber-700",
+export const metadata: Metadata = {
+  title: LANGUAGES.META_TITLE_HOME,
+  alternates: {
+    canonical: "/",
+  },
 };
 
-const TABLE_HEADERS = ["#", "Student", "Class", "Math", "Literature", "English", "Avg", "Grade"];
-
-// ─── Sub-components ──────────────────────────────────────────────────────────
-
-function StatCard({
-  icon,
-  label,
-  value,
-  sub,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string | number;
-  sub: React.ReactNode;
-}) {
-  return (
-    <div className="bg-white border border-slate-100 rounded-2xl p-5 flex flex-col gap-1 hover:shadow-md transition-shadow duration-200">
-      <div className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 mb-2">
-        {icon}
-      </div>
-      <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
-        {label}
-      </p>
-      <p className="text-[2rem] font-extrabold text-slate-900 leading-none my-1">{value}</p>
-      <div className="text-[12px] text-slate-500 flex items-center gap-1">{sub}</div>
-    </div>
-  );
-}
-
-function SubjectBar({
-  subject,
-  score,
-  color,
-}: {
-  subject: string;
-  score: number;
-  color: string;
-}) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="text-[13px] text-slate-500 w-24 shrink-0">{subject}</span>
-      <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-        <div className={`h-full rounded-full ${color}`} style={{ width: `${score}%` }} />
-      </div>
-      <span className="text-[13px] font-bold text-slate-700 w-6 text-right">{score}</span>
-    </div>
-  );
-}
-
-// ─── Page ────────────────────────────────────────────────────────────────────
-
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-slate-50">
-
-      {/* ── Top bar ── */}
       <header className="sticky top-0 z-10 flex items-center justify-between gap-4 bg-white border-b border-slate-100 px-8 py-4">
         <div>
           <h1 className="text-[1.15rem] font-bold text-slate-900 leading-snug">
@@ -114,7 +27,6 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Search */}
           <div className="relative">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
@@ -127,27 +39,19 @@ export default function Home() {
             />
           </div>
 
-          {/* Icon buttons */}
-          {[
-            { icon: <Bell size={15} />, label: "Notifications" },
-            { icon: <Plus size={15} />, label: "Add" },
-            { icon: <MoreHorizontal size={15} />, label: "More" },
-          ].map(({ icon, label }) => (
+          {ICON_BUTTONS.map(({ icon: Icon, label }) => (
             <button
               key={label}
               aria-label={label}
               className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition"
             >
-              {icon}
+              <Icon className="h-3.5 w-3.5" />
             </button>
           ))}
         </div>
       </header>
 
-      {/* ── Main content ── */}
       <main className="flex-1 px-8 py-7 flex flex-col gap-6">
-
-        {/* Stat cards */}
         <div className="grid grid-cols-4 gap-4">
           <StatCard
             icon={<Users size={18} />}
@@ -187,10 +91,7 @@ export default function Home() {
           />
         </div>
 
-        {/* Middle row — scores + activity */}
         <div className="grid grid-cols-2 gap-4">
-
-          {/* Average scores by subject */}
           <div className="bg-white border border-slate-100 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-[15px] font-bold text-slate-900">Average scores by subject</h2>
@@ -208,7 +109,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Recent activity */}
           <div className="bg-white border border-slate-100 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-[15px] font-bold text-slate-900">Recent activity</h2>
@@ -236,7 +136,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Top students table */}
         <div className="bg-white border border-slate-100 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-[15px] font-bold text-slate-900">Top students this semester</h2>
