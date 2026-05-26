@@ -27,6 +27,12 @@ const findById = (id) => {
   });
 };
 
+const findByEnrollments = (enrollmentIds) => {
+  return Score.find({
+    enrollment: { $in: enrollmentIds },
+  });
+};
+
 const list = async ({ query = {}, skip = 0, limit = 10 }) => {
   const [scores, count] = await Promise.all([
     Score.find(query)
@@ -50,7 +56,8 @@ const list = async ({ query = {}, skip = 0, limit = 10 }) => {
 export default {
   save,
   create,
+  list,
   findOne,
   findById,
-  list,
+  findByEnrollments,
 };

@@ -1,6 +1,7 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const API_ENDPOINTS = {
+  users: `${API_BASE_URL}/users`,
   students: `${API_BASE_URL}/students`,
   subjects: `${API_BASE_URL}/subjects`,
   scores: `${API_BASE_URL}/scores`,

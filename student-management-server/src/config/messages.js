@@ -19,3 +19,11 @@ export const MESSAGE_GENERAL = {
 export const MESSAGE_USER = {
   USER_EXISTED_WITH_EMAIL: "An account with this email already exists.",
 };
+
+export const MESSAGE_ENROLL = {
+  USER_ALREADY_ENROLLED: "Student already enrolled this subject",
+};
+
+export const MESSAGE_SCORE = {
+  SCORE_EXISTS_ENROLLMENT: "Score already exists for this enrollment",
+};

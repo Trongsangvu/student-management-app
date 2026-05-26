@@ -20,6 +20,10 @@ const findById = (id) => {
   return Enrollment.findById(id).populate("student").populate("subject");
 };
 
+const findByStudent = (studentId) => {
+  return Enrollment.find({ student: studentId }).populate("subject");
+};
+
 const list = async ({ query = {}, skip = 0, limit = 10 }) => {
   const [enrollments, count] = await Promise.all([
     Enrollment.find(query)
@@ -43,5 +47,6 @@ export default {
   create,
   findOne,
   findById,
+  findByStudent,
   list,
 };
