@@ -1,13 +1,19 @@
+import { CONSTANTS } from "../config/constants.js";
+import {
+  MESSAGE_USER,
+  messageExisted,
+  messageNotFound,
+} from "../config/messages.js";
+import { ApiResponse } from "../config/response.js";
 import { User } from "../models/user.model.js";
 import userService from "../services/user.service.js";
-import { logError } from "../utils/log.util.js";
 import {
   generateRandomSalt,
   hashPassword,
   verifyPassword,
 } from "../utils/hash.util.js";
-import { ApiResponse } from "../config/response.js";
-import { MESSAGE_USER } from "../config/messages.js";
+import { jwtEncode } from "../utils/jwt.util.js";
+import { logError } from "../utils/log.util.js";
 
 const initAdmin = async () => {
   try {
@@ -53,10 +59,15 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await userService.findByEmailForAuth(email);
+
+    console.log("input password:", password);
+    console.log("hashed input:", await hashPassword(password, user.salt));
+    console.log("db password:", user.password);
+
     if (!user) {
       return ApiResponse.Unauthorized(res, "Invalid email or password");
     }
-    const isValid = await verifyPassword(password, user.salt, user.password);
+    const isValid = await verifyPassword(password, user.password, user.salt);
     if (!isValid) {
       return ApiResponse.Unauthorized(res, "Invalid email or password");
     }
@@ -151,18 +162,36 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    const { page = 1, limit = 10, role, search } = req.query;
+    const { page = 1, limit = 10, search } = req.query;
 
     const data = await userService.list({
-      page: Number(page),
-      limit: Number(limit),
-      role,
+      page: parseInt(page),
+      limit: parseInt(limit),
       search,
     });
 
     return ApiResponse.OK(res, { data: data });
   } catch (error) {
     return ApiResponse.InternalServerError(res, error);
+  }
+};
+
+const userById = async (req, res, next) => {
+  try {
+    const { params } = req;
+
+    // Define base query
+    const query = { _id: params.id };
+
+    const foundUser = await userService.findOne(query);
+    if (!foundUser) {
+      return ApiResponse.NotFound(res, messageNotFound("User"));
+    }
+
+    req.targetUser = foundUser;
+    next();
+  } catch (err) {
+    return ApiResponse.InternalServerError(res, err);
   }
 };
 
@@ -198,4 +227,10 @@ export default {
   initAdmin,
   verifyToken,
   login,
+  create,
+  update,
+  detail,
+  remove,
+  list,
+  userById,
 };

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { BaseSchema } from "./base.model";
-import { GENDER, STUDENT_STATUS } from "../config/enum";
+import { GENDER, USER_STATUS } from "../config/enum";
 
 const studentSchema = BaseSchema({
   user: {
@@ -60,8 +60,8 @@ const studentSchema = BaseSchema({
 
   status: {
     type: String,
-    enum: Object.values(STUDENT_STATUS),
-    default: STUDENT_STATUS.ACTIVE,
+    enum: Object.values(USER_STATUS),
+    default: USER_STATUS.ACTIVE,
   },
 });
 

@@ -10,7 +10,7 @@ export const GENDER = {
   OTHER: "other",
 };
 
-export const STUDENT_STATUS = {
+export const USER_STATUS = {
   ACTIVE: "active",
   GRADUATED: "graduated",
   SUSPENDED: "suspended",

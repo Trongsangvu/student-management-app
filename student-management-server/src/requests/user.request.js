@@ -1,11 +1,18 @@
 import z from "zod";
-import { USER_ROLE, USER_STATUS } from "../configs/enum.js";
+import { USER_STATUS, USER_ROLE } from "../config/enum.js";
 
 const DEFAULT_ROLE = USER_ROLE.STUDENT;
 const ROLE_VALUES = Object.values(USER_ROLE);
 const STATUS_VALUES = Object.values(USER_STATUS);
 
 const optionalString = z.string().trim().optional();
+
+export const userLoginRequest = z.object({
+  body: z.object({
+    email: z.email().nonempty(),
+    password: z.string().trim().nonempty(),
+  }),
+});
 
 export const userCreateRequest = z
   .object({

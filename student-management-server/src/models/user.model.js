@@ -26,8 +26,8 @@ const UserSchema = BaseSchema({
   email: {
     type: String,
     required: true,
-    unique: true,
     index: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -55,11 +55,5 @@ const UserSchema = BaseSchema({
     default: null,
   },
 });
-
-// Indexes
-UserSchema.index({ email: 1 });
-UserSchema.index({ role: 1 });
-UserSchema.index({ student_code: 1 });
-UserSchema.index({ teacher_code: 1 });
 
 export const User = model("User", UserSchema);

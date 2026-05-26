@@ -5,13 +5,13 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 
-// import router from "./src/routes/index.js";
 import {
   InternalServerError,
   NotFound,
   OK,
 } from "./src/utils/response.util.js";
 import { CONSTANTS } from "./src/config/constants.js";
+import router from "./src/routes/index.js";
 
 // Initialize Express app
 const app = express();
@@ -26,7 +26,7 @@ app.use(
         scriptSrc: ["'self'"],
       },
     },
-  })
+  }),
 );
 
 // CORS configuration
@@ -69,7 +69,7 @@ app.get("/api/v1/health", (_req, res) => {
 });
 
 // API routes
-// app.use("/api/v1", router);
+app.use("/api/v1", router);
 
 // 404 handler
 app.use((_req, res) => {

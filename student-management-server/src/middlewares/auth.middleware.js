@@ -1,7 +1,8 @@
 import { CONSTANTS } from "../config/constants.js";
+import { USER_ROLE } from "../config/enum.js";
+import { ApiResponse } from "../config/response.js";
 import userService from "../services/user.service.js";
 import { jwtDecode } from "../utils/jwt.util.js";
-import { ApiResponse } from "./../configs/response.js";
 
 const extractToken = (authorizationHeader) => {
   if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
@@ -62,7 +63,16 @@ const tokenRequired =
       ApiResponse.InternalServerError(res, err);
     }
   };
+
 export const allTokenRequired = tokenRequired();
-export const adminTokenRequired = tokenRequired("admin");
-export const studentTokenRequired = tokenRequired("student");
-export const teacherTokenRequired = tokenRequired("teacher");
+
+export const adminTokenRequired = tokenRequired(USER_ROLE.ADMIN);
+
+export const teacherTokenRequired = tokenRequired(USER_ROLE.TEACHER);
+
+export const studentTokenRequired = tokenRequired(USER_ROLE.STUDENT);
+
+export const teacherAndAdminTokenRequired = tokenRequired([
+  USER_ROLE.ADMIN,
+  USER_ROLE.TEACHER,
+]);
