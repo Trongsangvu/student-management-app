@@ -1,4 +1,4 @@
-import { EnrollMent } from "../models/enrollment.model";
+import { EnrollMent } from "../models/enrollment.model.js";
 
 const save = (enrollment) => {
   return enrollment.save();

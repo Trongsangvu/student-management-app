@@ -1,6 +1,7 @@
-import { BaseSchema } from "./base.model";
+import { model } from "mongoose";
+import { BaseSchema } from "./base.model.js";
 
-const subjectSchema = BaseSchema({
+const SubjectSchema = BaseSchema({
   code: {
     type: String,
     required: true,
@@ -17,4 +18,4 @@ const subjectSchema = BaseSchema({
   },
 });
 
-export const Subject = model("Subject", subjectSchema);
+export const Subject = model("Subject", SubjectSchema);

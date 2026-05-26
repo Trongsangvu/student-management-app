@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { BaseSchema } from "./base.model";
+import mongoose, { model } from "mongoose";
+import { BaseSchema } from "./base.model.js";
 
 const EnrollmentSchema = BaseSchema({
   student: {

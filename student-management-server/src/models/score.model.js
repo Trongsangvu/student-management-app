@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-import { BaseSchema } from "./base.model";
+import mongoose, { model } from "mongoose";
+import { BaseSchema } from "./base.model.js";
 
-const scoreSchema = BaseSchema({
+const ScoreSchema = BaseSchema({
   enrollment: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Enrollment",

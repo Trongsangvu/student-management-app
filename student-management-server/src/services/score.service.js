@@ -1,4 +1,4 @@
-import { Score } from "../models/score.model";
+import { Score } from "../models/score.model.js";
 
 const save = (score) => {
   return score.save();
