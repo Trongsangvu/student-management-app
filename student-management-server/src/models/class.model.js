@@ -1,10 +1,20 @@
 import mongoose, { model } from "mongoose";
 import { BaseSchema } from "./base.model";
 
-const classSchema = BaseSchema({
-  name: String,
-  faculty: String,
-  academicYear: String,
+const classesSchema = BaseSchema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  faculty: {
+    type: String,
+    required: true,
+  },
+  academicYear: {
+    type: String,
+    required: true,
+  },
 });
 
-export const Class = model("Class", classSchema);
+export const Classes = model("Classes", classesSchema);

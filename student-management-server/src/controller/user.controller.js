@@ -1,8 +1,13 @@
 import { User } from "../models/user.model.js";
 import userService from "../services/user.service.js";
 import { logError } from "../utils/log.util.js";
-import { generateRandomSalt, hashPassword, verifyPassword } from "../utils/hash.util.js";
+import {
+  generateRandomSalt,
+  hashPassword,
+  verifyPassword,
+} from "../utils/hash.util.js";
 import { ApiResponse } from "../config/response.js";
+import { MESSAGE_USER } from "../config/messages.js";
 
 const initAdmin = async () => {
   try {
@@ -40,7 +45,7 @@ const verifyToken = async (req, res) => {
   try {
     return ApiResponse.OK(res, { user: req.user });
   } catch (error) {
-    ApiResponse.InternalServerError(res, error);
+    return ApiResponse.InternalServerError(res, error);
   }
 };
 
@@ -78,10 +83,115 @@ const login = async (req, res) => {
       user,
       access_token,
     });
-
   } catch (error) {
-    ApiResponse.InternalServerError(res, error);
-  };
+    return ApiResponse.InternalServerError(res, error);
+  }
+};
+
+const create = async (req, res) => {
+  try {
+    const user = req.user;
+    const userData = req.validatedBody;
+
+    const existingUser = await userService.findOne({ email: userData.email });
+    if (existingUser) {
+      return ApiResponse.BadRequest(res, MESSAGE_USER.USER_EXISTED_WITH_EMAIL);
+    }
+
+    if (userData.student_code) {
+      const existingStudentCode = await userService.findOne({
+        student_code: userData.student_code,
+      });
+
+      if (existingStudentCode) {
+        return ApiResponse.BadRequest(res, messageExisted("student code"));
+      }
+    }
+
+    if (userData.teacher_code) {
+      const existingTeacherCode = await userService.findOne({
+        teacher_code: userData.teacher_code,
+      });
+
+      if (existingTeacherCode) {
+        return ApiResponse.BadRequest(res, messageExisted("teacher code"));
+      }
+    }
+
+    if (userData.role === USER_ROLE.ADMIN) {
+      userData.student_code = undefined;
+      userData.teacher_code = undefined;
+      userData.class = undefined;
+    }
+
+    if (userData.role === USER_ROLE.TEACHER) {
+      userData.student_code = undefined;
+      userData.class = undefined;
+    }
+
+    if (userData.role === USER_ROLE.STUDENT) {
+      userData.teacher_code = undefined;
+    }
+
+    const randomSalt = generateRandomSalt();
+    const hashedPass = await hashPassword(userData.password, randomSalt);
+
+    userData.salt = randomSalt;
+    userData.password = hashedPass;
+    userData.full_name = `${userData.last_name} ${userData.first_name}`;
+    userData.created_by = user.id;
+
+    const data = await userService.create(userData);
+
+    return ApiResponse.Created(res, { data: data });
+  } catch (error) {
+    return ApiResponse.InternalServerError(res, error);
+  }
+};
+
+const list = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, role, search } = req.query;
+
+    const data = await userService.list({
+      page: Number(page),
+      limit: Number(limit),
+      role,
+      search,
+    });
+
+    return ApiResponse.OK(res, { data: data });
+  } catch (error) {
+    return ApiResponse.InternalServerError(res, error);
+  }
+};
+
+const detail = async (req, res) => {
+  try {
+    return ApiResponse.OK(res, req.targetUser);
+  } catch (error) {
+    return ApiResponse.InternalServerError(res, error);
+  }
+};
+
+const update = async (req, res) => {
+  try {
+    const data = await userService.update(req.params.id, req.body);
+
+    return ApiResponse.OK(res, { data: data });
+  } catch (error) {
+    return ApiResponse.InternalServerError(res, error);
+  }
+};
+
+const remove = async (req, res) => {
+  try {
+    await userService.remove(req.params.id);
+
+    return ApiResponse.OK(res, messageDeleted("User"));
+  } catch (error) {
+    return ApiResponse.InternalServerError(res, error);
+  }
 };
 
 export default {

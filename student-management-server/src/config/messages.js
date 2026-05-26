@@ -15,3 +15,7 @@ export const MESSAGE_GENERAL = {
   NOT_FOUND: "Resource not found",
   NOT_MATCH: "Don't match",
 };
+
+export const MESSAGE_USER = {
+  USER_EXISTED_WITH_EMAIL: "An account with this email already exists.",
+};
