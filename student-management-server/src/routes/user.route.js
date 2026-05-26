@@ -1,24 +1,24 @@
 import express from "express";
 
 import userController from "../controller/user.controller.js";
-import { adminTokenRequired, allTokenRequired, teacherAndAdminTokenRequired } from "../middlewares/auth.middleware.js";
+import {
+  adminTokenRequired,
+  allTokenRequired,
+  adminAndTeacherTokenRequired,
+} from "../middlewares/auth.middleware.js";
 import { validateRequest } from "../middlewares/validate.middleware.js";
 import { objectIdSchema } from "../requests/base.request.js";
-import { userCreateRequest, userLoginRequest, userUpdateRequest } from "../requests/user.request.js";
+import {
+  userCreateRequest,
+  userLoginRequest,
+  userUpdateRequest,
+} from "../requests/user.request.js";
 
 const router = express.Router();
 
-router.get(
-  "/verify-token",
-  allTokenRequired,
-  userController.verifyToken,
-);
+router.get("/verify-token", allTokenRequired, userController.verifyToken);
 
-router.post(
-  "/login",
-  validateRequest(userLoginRequest),
-  userController.login,
-);
+router.post("/login", validateRequest(userLoginRequest), userController.login);
 
 router.post(
   "/",
@@ -27,15 +27,11 @@ router.post(
   userController.create,
 );
 
-router.get(
-  "/",
-  teacherAndAdminTokenRequired,
-  userController.list,
-);
+router.get("/", adminAndTeacherTokenRequired, userController.list);
 
 router.get(
   "/:id",
-  teacherAndAdminTokenRequired,
+  adminAndTeacherTokenRequired,
   validateRequest(objectIdSchema),
   userController.userById,
   userController.detail,
@@ -43,7 +39,7 @@ router.get(
 
 router.put(
   "/:id",
-  teacherAndAdminTokenRequired,
+  adminAndTeacherTokenRequired,
   validateRequest(objectIdSchema),
   validateRequest(userUpdateRequest),
   userController.userById,

@@ -72,7 +72,7 @@ export const teacherTokenRequired = tokenRequired(USER_ROLE.TEACHER);
 
 export const studentTokenRequired = tokenRequired(USER_ROLE.STUDENT);
 
-export const teacherAndAdminTokenRequired = tokenRequired([
+export const adminAndTeacherTokenRequired = tokenRequired([
   USER_ROLE.ADMIN,
   USER_ROLE.TEACHER,
 ]);

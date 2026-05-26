@@ -1,65 +1,100 @@
-import { messageDeleted, messageNotFound } from "../config/messages";
-import { ApiResponse } from "../config/response";
-import { User } from "../models/user.model";
-import userService from "../services/user.service";
+import { USER_ROLE } from "../config/enum.js";
+import { messageDeleted, messageNotFound } from "../config/messages.js";
+import { ApiResponse } from "../config/response.js";
+import userService from "../services/user.service.js";
 
 const create = async (req, res) => {
   try {
-    const student = await userService.create(req.body);
+    const studentData = {
+      ...req.validatedBody,
+      role: USER_ROLE.STUDENT,
+    };
 
-    ApiResponse.Created(res, { data: student });
+    const student = await userService.create(studentData);
+
+    return ApiResponse.Created(res, { data: student });
   } catch (error) {
-    ApiResponse.InternalServerError(res, error);
+    return ApiResponse.InternalServerError(res, error);
   }
 };
 
 const getAll = async (req, res) => {
   try {
-    const students = await User.find().sort({ createdAt: -1 });
+    const { page, limit, search } = req.query;
 
-    ApiResponse.OK(res, { data: students });
+    const query = {
+      role: USER_ROLE.STUDENT,
+    };
+
+    if (search) {
+      query.$or = [
+        { full_name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { student_code: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const page = parseInt(page, 10) || 1;
+    const limit = parseInt(limit, 10) || 10;
+    const skip = (page - 1) * limit;
+
+    const { users, count } = await userService.list(query, skip, limit);
+
+    return ApiResponse.OK(res, { users, count });
   } catch (error) {
-    ApiResponse.InternalServerError(res, error);
+    return ApiResponse.InternalServerError(res, error);
   }
 };
 
 const getById = async (req, res) => {
   try {
-    ApiResponse.OK(res, req.targetUser);
+    return ApiResponse.OK(res, {
+      data: req.targetUser,
+    });
   } catch (error) {
-    ApiResponse.InternalServerError(res, error);
+    return ApiResponse.InternalServerError(res, error);
   }
 };
 
 const update = async (req, res) => {
   try {
-    const student = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!student) {
-      ApiResponse.NotFound(res, messageNotFound("Student"));
+    if (!req.targetUser || req.targetUser.role !== USER_ROLE.STUDENT) {
+      return ApiResponse.NotFound(res, messageNotFound("Student"));
     }
 
-    ApiResponse.OK(res, { data: student });
+    const student = await userService.update(req.params.id, {
+      ...req.validatedBody,
+      role: USER_ROLE.STUDENT,
+    });
+
+    return ApiResponse.OK(res, {
+      data: student,
+    });
   } catch (error) {
-    ApiResponse.InternalServerError(res, error);
+    return ApiResponse.InternalServerError(res, error);
   }
 };
 
 const remove = async (req, res) => {
   try {
-    const student = await User.findByIdAndDelete(req.params.id);
-
-    if (!student) {
-      ApiResponse.NotFound(res, messageNotFound("Student"));
+    if (!req.targetUser || req.targetUser.role !== USER_ROLE.STUDENT) {
+      return ApiResponse.NotFound(res, messageNotFound("Student"));
     }
 
-    ApiResponse.OK(res, messageDeleted("Student"));
+    await userService.remove(req.params.id);
+
+    return ApiResponse.OK(res, {
+      message: messageDeleted("Student"),
+    });
   } catch (error) {
-    ApiResponse.InternalServerError(res, error);
+    return ApiResponse.InternalServerError(res, error);
   }
 };
 
-export default { create, getAll, getById, remove, update };
+export default {
+  create,
+  getAll,
+  getById,
+  update,
+  remove,
+};

@@ -41,6 +41,27 @@ const create = async (req, res) => {
   }
 };
 
+const getStudentSubjects = async (req, res) => {
+  try {
+    const student = await userService.findById(req.params.studentId);
+
+    if (!student || student.role !== USER_ROLE.STUDENT) {
+      return ApiResponse.BadRequest(res, messageNotFound("Student"));
+    }
+
+    const enrollments = await enrollmentService.findByStudent(
+      req.params.studentId,
+    );
+
+    return ApiResponse.OK(res, {
+      data: enrollments,
+    });
+  } catch (error) {
+    return ApiResponse.InternalServerError(res, error);
+  }
+};
+
 export default {
   create,
+  getStudentSubjects,
 };

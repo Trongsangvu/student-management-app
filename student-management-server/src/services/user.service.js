@@ -31,6 +31,17 @@ const findByIdForAuth = async (id) => {
   return user;
 };
 
+const update = (id, data) => {
+  return User.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
+};
+
+const remove = (id) => {
+  return User.findByIdAndDelete(id);
+};
+
 const list = async (query, skip, limit) => {
   const [users, count] = await Promise.all([
     User.find(query)
@@ -57,4 +68,6 @@ export default {
   findByEmail,
   list,
   findById,
+  update,
+  remove,
 };

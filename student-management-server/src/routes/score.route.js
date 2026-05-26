@@ -1,16 +1,21 @@
 import express from "express";
+import scoreController from "../controller/score.controller";
+import { adminAndTeacherTokenRequired } from "../middlewares/auth.middleware";
+import { scoreCreateRequest } from "../requests/score.request";
 
 const router = express.Router();
 
 router.post(
-  "/scores",
+  "/",
   adminAndTeacherTokenRequired,
   validateRequest(scoreCreateRequest),
   scoreController.create,
 );
 
 router.get(
-  "/students/:studentId/gpa",
+  "/:id/gpa",
   adminAndTeacherTokenRequired,
   scoreController.getStudentGPA,
 );
+
+export default router;
