@@ -35,6 +35,17 @@ const list = async ({ query = {}, skip = 0, limit }) => {
   };
 };
 
+const update = (id, data) => {
+  return Class.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
+};
+
+const remove = (id) => {
+  return Class.findByIdAndDelete(id);
+};
+
 export default {
   save,
   create,
@@ -42,4 +53,6 @@ export default {
   findById,
   findByName,
   list,
+  update,
+  remove,
 };
