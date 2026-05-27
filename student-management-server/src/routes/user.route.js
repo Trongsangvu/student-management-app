@@ -8,9 +8,17 @@ import { userCreateRequest, userLoginRequest, userUpdateRequest } from "../reque
 
 const router = express.Router();
 
-router.get("/verify-token", allTokenRequired, userController.verifyToken);
+router.get(
+  "/verify-token", 
+  allTokenRequired,
+  userController.verifyToken,
+);
 
-router.post("/login", validateRequest(userLoginRequest), userController.login);
+router.post(
+  "/login",
+  validateRequest(userLoginRequest),
+  userController.login,
+);
 
 router.post(
   "/",
@@ -19,7 +27,11 @@ router.post(
   userController.create,
 );
 
-router.get("/", adminAndTeacherTokenRequired, userController.list);
+router.get(
+  "/",
+  adminAndTeacherTokenRequired,
+  userController.list,
+);
 
 router.get(
   "/:id",
@@ -37,5 +49,12 @@ router.put(
   userController.userById,
   userController.update,
 );
+
+router.delete(
+  "/:id",
+  adminTokenRequired,
+  validateRequest(objectIdSchema),
+  userController.remove,
+)
 
 export default router;

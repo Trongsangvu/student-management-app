@@ -1,3 +1,4 @@
+import { USER_ROLE } from "../config/enum.js";
 import { User } from "../models/user.model.js";
 
 const save = async (user) => {
@@ -33,7 +34,7 @@ const findByIdForAuth = async (id) => {
 
 const update = (id, data) => {
   return User.findByIdAndUpdate(id, data, {
-    new: true,
+    returnDocument: "after",
     runValidators: true,
   });
 };
@@ -47,7 +48,7 @@ const list = async (query, skip, limit) => {
     User.find(query)
       .skip(skip)
       .limit(limit)
-      .populate("created_by", "display_name email")
+      .populate("created_by", "full_name email")
       .sort("-created_at"),
     User.countDocuments(query),
   ]);
@@ -57,6 +58,18 @@ const list = async (query, skip, limit) => {
 const findById = async (id) => {
   const user = await User.findById(id);
   return user;
+};
+
+const count = (query = {}) => {
+  return User.countDocuments(query);
+};
+
+const generateUserCode = async (role) => {
+  const prefix = role === USER_ROLE.STUDENT ? "STU" : "TCH";
+
+  const result = await count({ role });
+
+  return `${prefix}${String(result + 1).padStart(4, "0")}`;
 };
 
 export default {
@@ -70,4 +83,5 @@ export default {
   findById,
   update,
   remove,
+  generateUserCode,
 };

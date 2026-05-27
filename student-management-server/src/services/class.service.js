@@ -37,7 +37,7 @@ const list = async ({ query = {}, skip = 0, limit }) => {
 
 const update = (id, data) => {
   return Class.findByIdAndUpdate(id, data, {
-    new: true,
+    returnDocument: "after",
     runValidators: true,
   });
 };

@@ -16,3 +16,8 @@ export const USER_STATUS = {
   SUSPENDED: "suspended",
   DROPPED: "dropped",
 };
+
+export const USER_SEARCH_FIELDS = {
+  EMAIL: "email",
+  FULL_NAME: "full_name",
+};

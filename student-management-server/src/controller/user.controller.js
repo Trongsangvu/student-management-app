@@ -1,12 +1,22 @@
 import { CONSTANTS } from "../config/constants.js";
-import { USER_ROLE } from "../config/enum.js";
-import { MESSAGE_USER, messageExisted, messageNotFound } from "../config/messages.js";
+import { USER_ROLE, USER_SEARCH_FIELDS } from "../config/enum.js";
+import {
+  MESSAGE_USER,
+  messageDeleted,
+  messageExisted,
+  messageNotFound,
+} from "../config/messages.js";
 import { ApiResponse } from "../config/response.js";
 import { User } from "../models/user.model.js";
 import userService from "../services/user.service.js";
-import { generateRandomSalt, hashPassword, verifyPassword } from "../utils/hash.util.js";
+import {
+  generateRandomSalt,
+  hashPassword,
+  verifyPassword,
+} from "../utils/hash.util.js";
 import { jwtEncode } from "../utils/jwt.util.js";
 import { logError } from "../utils/log.util.js";
+import { buildSearchQuery } from "../utils/query.util.js";
 
 const initAdmin = async () => {
   try {
@@ -67,7 +77,7 @@ const login = async (req, res) => {
     user.reset_password_expires = undefined;
 
     const jwtData = {
-      id: user._id,
+      sub: user.id,
       email: user.email,
       role: user.role,
       iat: Math.floor(Date.now() / 1000),
@@ -127,10 +137,16 @@ const create = async (req, res) => {
     if (userData.role === USER_ROLE.TEACHER) {
       userData.student_code = undefined;
       userData.class = undefined;
+      userData.teacher_code = await userService.generateUserCode(
+        USER_ROLE.TEACHER,
+      );
     }
 
     if (userData.role === USER_ROLE.STUDENT) {
       userData.teacher_code = undefined;
+      userData.student_code = await userService.generateUserCode(
+        USER_ROLE.STUDENT,
+      );
     }
 
     const randomSalt = generateRandomSalt();
@@ -151,13 +167,27 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    const { page = 1, limit = 10, search } = req.query;
+    const user = req.user;
+    const { search } = req.query;
+    let query = {};
 
-    const data = await userService.list({
-      page: parseInt(page),
-      limit: parseInt(limit),
-      search,
-    });
+    query.role = {
+      $in: [USER_ROLE.TEACHER, USER_ROLE.STUDENT],
+    };
+    console.log(query);
+
+    const searchQuery = buildSearchQuery(search, USER_SEARCH_FIELDS);
+    if (searchQuery) {
+      query = {
+        $and: [query, searchQuery],
+      };
+    }
+
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
+
+    const data = await userService.list(query, skip, limit);
 
     return ApiResponse.OK(res, { data: data });
   } catch (error) {

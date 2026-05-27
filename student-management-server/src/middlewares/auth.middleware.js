@@ -60,7 +60,7 @@ const tokenRequired =
       req.user = currentUser;
       next();
     } catch (err) {
-      ApiResponse.InternalServerError(res, err);
+      return ApiResponse.InternalServerError(res, err);
     }
   };
 

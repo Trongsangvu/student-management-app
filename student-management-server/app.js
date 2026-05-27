@@ -1,6 +1,6 @@
 import bodyParser from "body-parser";
-// import cookieParser from "cookie-parser";
-// import session from "cookie-session";
+import cookieParser from "cookie-parser";
+import session from "cookie-session";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
@@ -24,8 +24,15 @@ app.use(
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         scriptSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:"],
+        fontSrc: ["'self'", "https:"],
+        connectSrc: ["'self'"],
+        mediaSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        frameSrc: ["'none'"],
       },
     },
+    crossOriginEmbedderPolicy: false,
   }),
 );
 
@@ -44,21 +51,21 @@ app.use(bodyParser.json({}));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Cookie and session middleware
-// app.use(cookieParser(CONSTANTS.COOKIE_SECRET));
-// app.use(
-//   session({
-//     name: "session",
-//     secret: CONSTANTS.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       secure: CONSTANTS.NODE_ENV === "production",
-//       httpOnly: true,
-//       sameSite: "strict",
-//       maxAge: 30 * 60 * 1000, // 30 minutes
-//     },
-//   })
-// );
+app.use(cookieParser(CONSTANTS.COOKIE_SECRET));
+app.use(
+  session({
+    name: "session",
+    secret: CONSTANTS.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: CONSTANTS.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 30 * 60 * 1000, // 30 minutes
+    },
+  }),
+);
 
 // Health check endpoint
 app.get("/api/v1/health", (_req, res) => {
