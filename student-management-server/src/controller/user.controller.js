@@ -174,7 +174,6 @@ const list = async (req, res) => {
     query.role = {
       $in: [USER_ROLE.TEACHER, USER_ROLE.STUDENT],
     };
-    console.log(query);
 
     const searchQuery = buildSearchQuery(search, USER_SEARCH_FIELDS);
     if (searchQuery) {
