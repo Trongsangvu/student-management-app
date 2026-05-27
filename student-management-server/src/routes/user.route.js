@@ -1,18 +1,10 @@
 import express from "express";
 
 import userController from "../controller/user.controller.js";
-import {
-  adminTokenRequired,
-  allTokenRequired,
-  adminAndTeacherTokenRequired,
-} from "../middlewares/auth.middleware.js";
+import { adminAndTeacherTokenRequired, adminTokenRequired, allTokenRequired } from "../middlewares/auth.middleware.js";
 import { validateRequest } from "../middlewares/validate.middleware.js";
 import { objectIdSchema } from "../requests/base.request.js";
-import {
-  userCreateRequest,
-  userLoginRequest,
-  userUpdateRequest,
-} from "../requests/user.request.js";
+import { userCreateRequest, userLoginRequest, userUpdateRequest } from "../requests/user.request.js";
 
 const router = express.Router();
 

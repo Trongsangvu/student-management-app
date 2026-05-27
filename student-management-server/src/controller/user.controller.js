@@ -1,17 +1,10 @@
 import { CONSTANTS } from "../config/constants.js";
-import {
-  MESSAGE_USER,
-  messageExisted,
-  messageNotFound,
-} from "../config/messages.js";
+import { USER_ROLE } from "../config/enum.js";
+import { MESSAGE_USER, messageExisted, messageNotFound } from "../config/messages.js";
 import { ApiResponse } from "../config/response.js";
 import { User } from "../models/user.model.js";
 import userService from "../services/user.service.js";
-import {
-  generateRandomSalt,
-  hashPassword,
-  verifyPassword,
-} from "../utils/hash.util.js";
+import { generateRandomSalt, hashPassword, verifyPassword } from "../utils/hash.util.js";
 import { jwtEncode } from "../utils/jwt.util.js";
 import { logError } from "../utils/log.util.js";
 
@@ -59,10 +52,6 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await userService.findByEmailForAuth(email);
-
-    console.log("input password:", password);
-    console.log("hashed input:", await hashPassword(password, user.salt));
-    console.log("db password:", user.password);
 
     if (!user) {
       return ApiResponse.Unauthorized(res, "Invalid email or password");
