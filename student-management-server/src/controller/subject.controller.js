@@ -28,7 +28,7 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const { page = 1, limit = 10, search } = req.query;
+    const { search } = req.query;
 
     const query = {};
 
@@ -39,23 +39,13 @@ const getAll = async (req, res) => {
       ];
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
 
-    const { subjects, count } = await subjectService.list(
-      query,
-      skip,
-      Number(limit),
-    );
+    const { subjects, count } = await subjectService.list(query, skip, limit);
 
-    return ApiResponse.OK(res, {
-      data: subjects,
-      pagination: {
-        total: count,
-        page: Number(page),
-        limit: Number(limit),
-        total_pages: Math.ceil(count / Number(limit)),
-      },
-    });
+    return ApiResponse.OK(res, { subjects, count });
   } catch (error) {
     return ApiResponse.InternalServerError(res, error);
   }
