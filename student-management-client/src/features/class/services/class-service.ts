@@ -38,3 +38,10 @@ export const classService = {
     });
   }
 };
+
+// Example:
+// async getBySlug(slug: string): Promise<ArticleDetail> {
+//   const url = `${API_ENDPOINTS.articles}${slug}`;
+
+//   return apiFetch<ArticleDetail>(url);
+// }
