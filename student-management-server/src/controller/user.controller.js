@@ -16,6 +16,7 @@ import {
 } from "../utils/hash.util.js";
 import { jwtEncode } from "../utils/jwt.util.js";
 import { logError } from "../utils/log.util.js";
+import { getPagination } from "../utils/pagination.util.js";
 import { buildSearchQuery } from "../utils/query.util.js";
 
 const initAdmin = async () => {
@@ -167,8 +168,8 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    const user = req.user;
     const { search } = req.query;
+    const { skip, limit } = getPagination(req.query);
     let query = {};
 
     query.role = {
@@ -181,10 +182,6 @@ const list = async (req, res) => {
         $and: [query, searchQuery],
       };
     }
-
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const skip = (page - 1) * limit;
 
     const data = await userService.list(query, skip, limit);
 

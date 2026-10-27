@@ -1,10 +1,11 @@
-import subjectService from "../services/subject.service.js";
-import { ApiResponse } from "../config/response.js";
 import {
   messageDeleted,
   messageExisted,
   messageNotFound,
 } from "../config/messages.js";
+import { ApiResponse } from "../config/response.js";
+import subjectService from "../services/subject.service.js";
+import { getPagination } from "../utils/pagination.util.js";
 
 const create = async (req, res) => {
   try {
@@ -29,6 +30,7 @@ const create = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const { search } = req.query;
+    const { skip, limit } = getPagination(req.query);
 
     const query = {};
 
@@ -38,10 +40,6 @@ const getAll = async (req, res) => {
         { code: { $regex: search, $options: "i" } },
       ];
     }
-
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const skip = (page - 1) * limit;
 
     const { subjects, count } = await subjectService.list(query, skip, limit);
 

@@ -2,6 +2,7 @@ import { USER_ROLE } from "../config/enum.js";
 import { messageDeleted, messageNotFound } from "../config/messages.js";
 import { ApiResponse } from "../config/response.js";
 import userService from "../services/user.service.js";
+import { getPagination } from "../utils/pagination.util.js";
 
 const create = async (req, res) => {
   try {
@@ -20,7 +21,8 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const { page, limit, search } = req.query;
+    const { skip, limit } = getPagination(req.query);
+    const { search } = req.query;
 
     const query = {
       role: USER_ROLE.STUDENT,
@@ -33,10 +35,6 @@ const getAll = async (req, res) => {
         { student_code: { $regex: search, $options: "i" } },
       ];
     }
-
-    const page = parseInt(page, 10) || 1;
-    const limit = parseInt(limit, 10) || 10;
-    const skip = (page - 1) * limit;
 
     const { users, count } = await userService.list(query, skip, limit);
 
